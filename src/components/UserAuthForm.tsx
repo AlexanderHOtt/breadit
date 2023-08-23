@@ -5,11 +5,13 @@ import { Button } from "./ui/Button";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { Icons } from "./Icons";
+import { useToast } from "@/hooks/use-toast";
 
 export default function UserAuthForm(
   { className, ...props }: React.HTMLAttributes<HTMLDivElement>,
 ) {
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const loginWithGoogle = async () => {
     setIsLoading(true);
@@ -17,7 +19,12 @@ export default function UserAuthForm(
     try {
       await signIn("google");
     } catch (err) {
-      // toast
+      console.log("Error logging in with google", err);
+      toast({
+        title: "There was a problem.",
+        description: "An error occured when logging in with Google.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
